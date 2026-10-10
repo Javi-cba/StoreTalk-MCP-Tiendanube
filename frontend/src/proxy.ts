@@ -1,4 +1,5 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { CLERK_PROXY_PATH, clerkUsesProxy } from "@/lib/auth/clerkProxy";
 
 // Solo el área privada pide sesión; la landing y el resto quedan públicos.
 // /connect/callback NO va acá: llega desde Tiendanube (navegación cross-site) y en esa request el
@@ -7,11 +8,15 @@ import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 // useAuthorizationRequest manda al login y vuelve. /connect-ai es la guía pública.
 const isPrivateRoute = createRouteMatcher(["/dashboard(.*)", "/connect"]);
 
-export default clerkMiddleware(async (auth, request) => {
-  if (isPrivateRoute(request)) {
-    await auth.protect();
-  }
-});
+export default clerkMiddleware(
+  async (auth, request) => {
+    if (isPrivateRoute(request)) {
+      await auth.protect();
+    }
+  },
+  // Producción en *.amplifyapp.com: atiende /__clerk/* reenviando al Frontend API de Clerk.
+  { frontendApiProxy: { enabled: clerkUsesProxy, path: CLERK_PROXY_PATH } },
+);
 
 export const config = {
   matcher: [
