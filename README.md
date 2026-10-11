@@ -1,4 +1,3 @@
-<img width="1440" height="777" alt="image" src="https://github.com/user-attachments/assets/0b086387-70e2-4c2e-83e6-853c0612e735" /># 🛍️ StoreTalk MCP
 
 > 🚧 **Proyecto en desarrollo** — las funcionalidades y la documentación pueden cambiar.
 
