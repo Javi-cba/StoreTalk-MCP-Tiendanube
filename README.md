@@ -1,4 +1,4 @@
-# 🛍️ StoreTalk MCP
+<img width="1440" height="777" alt="image" src="https://github.com/user-attachments/assets/0b086387-70e2-4c2e-83e6-853c0612e735" /># 🛍️ StoreTalk MCP
 
 > 🚧 **Proyecto en desarrollo** — las funcionalidades y la documentación pueden cambiar.
 
@@ -55,4 +55,4 @@ Tus credenciales se guardan cifradas y podés desconectar tu tienda en cualquier
 Proyecto en etapa temprana. Si te interesa probarlo o tenés ideas, abrí un issue.
 
 
-![image](https://github.com/user-attachments/assets/e7bacae3-cb78-42a3-b0fe-9f1f624e1fcb)
+![image](https://github.com/user-attachments/assets/f4c3c33d-e421-408e-85e7-2e9014b951c8)
