@@ -94,7 +94,10 @@ class TNStore(_TNModel):
     main_currency: str | None = None
     original_domain: str | None = None
     url_with_protocol: str | None = None
+    domains: list[str] = []  # custom domains (the first one is usually the main one)
     email: str | None = None
+    contact_email: str | None = None
+    phone: str | None = None
     logo: str | None = None
     country: str | None = None
     plan_name: str | None = None

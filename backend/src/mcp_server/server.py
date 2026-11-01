@@ -4,7 +4,7 @@ from fastmcp.server.auth import AuthProvider
 from src.config import get_settings
 from src.mcp_server.branding import server_icons
 from src.mcp_server.oauth import StoreTalkOAuthProvider
-from src.mcp_server.tools import categories, coupons, orders, products
+from src.mcp_server.tools import categories, coupons, orders, products, store
 
 
 def create_mcp(auth: AuthProvider | None = None) -> FastMCP:
@@ -13,6 +13,8 @@ def create_mcp(auth: AuthProvider | None = None) -> FastMCP:
         instructions=(
             "Tools to manage the user's connected Tiendanube store. "
             "The store is resolved from the API key; never ask the user for a store id. "
+            "For the store name, domain or storefront/product links call get_store_info; "
+            "never guess the domain. "
             "Infer reasonable details instead of asking (e.g. adding size L to a product copies "
             "price and image from its siblings) and tell the user what was assumed. "
             "Confirm with the user before destructive tools and before applying bulk changes "
@@ -26,6 +28,7 @@ def create_mcp(auth: AuthProvider | None = None) -> FastMCP:
     categories.register(server)
     coupons.register(server)
     orders.register(server)
+    store.register(server)
     return server
 
 

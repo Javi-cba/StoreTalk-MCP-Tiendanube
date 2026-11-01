@@ -50,7 +50,7 @@ def build_store_info(
         url=store.url_with_protocol if store else None,
         domain=store.original_domain if store else None,
         email=store.email if store else None,
-        logo_url=_absolute_url(store.logo) if store else None,
+        logo_url=absolute_url(store.logo) if store else None,
         country=store.country if store else None,
         language=language,
         currency=store.main_currency if store else None,
@@ -65,7 +65,7 @@ def split_scopes(scopes: str) -> list[str]:
     return [scope for scope in scopes.split(",") if scope]
 
 
-def _absolute_url(url: str | None) -> str | None:
+def absolute_url(url: str | None) -> str | None:
     """Tiendanube returns the logo as a protocol-relative URL (//dcdn-us.mitiendanube.com/...)."""
     if not url:
         return None
