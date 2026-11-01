@@ -48,3 +48,6 @@ Requisitos: [uv](https://docs.astral.sh/uv/), Node 20+, una base Postgres (Neon 
 5. Entrá a `http://localhost:3000`, conectá tu tienda y seguí la guía de `/connect-ai` para sumar el conector `<ngrok>/mcp` a tu asistente.
 
 Más detalle (API keys manuales, MCP Inspector, tests) en [`backend/LOCAL_DEV.md`](backend/LOCAL_DEV.md).
+
+![image](https://github.com/user-attachments/assets/e54bf712-3db7-4af5-9ecc-a09aa1f54a86)
+
