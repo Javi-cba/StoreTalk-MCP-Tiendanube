@@ -12,7 +12,7 @@ Stack: **Next.js (App Router) + React + TypeScript + Tailwind CSS**. Landing pag
 - **lucide-react** — íconos. Los que no existen en lucide (logos de marca como Tiendanube) van como componentes SVG en `components/ui/icons/`, con `fill="currentColor"` y prop `size`.
 - **clsx + tailwind-merge** — composición de clases (`cn()` en `lib/utils/`).
 
-## Estructura de carpetas
+## Estructura de carpetas 
 
 ```
 src/
