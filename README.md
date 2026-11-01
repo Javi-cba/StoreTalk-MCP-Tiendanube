@@ -1,57 +1,49 @@
+# StoreTalk
 
-> 🚧 **Proyecto en desarrollo** — las funcionalidades y la documentación pueden cambiar.
+Gestioná tu Tiendanube conversando con tu asistente de IA. Conectás tu tienda una vez y después le pedís en lenguaje natural lo que necesitás: *"subí 10% los precios de la categoría remeras"*, *"mostrame los pedidos de hoy"*, *"creá un cupón del 15% para el finde"*.
 
-Gestioná tu Tiendanube conversando con tu asistente de IA. Conectás tu tienda una vez y después le pedís en lenguaje natural lo que necesitás: *"subí 10% los precios de la categoría remeras"*, *"¿qué productos se quedaron sin stock?"*, *"creá un cupón del 15% para el finde"*.
+StoreTalk es un **servidor MCP remoto** (FastAPI + FastMCP) con un sitio web (Next.js) para registrarte, conectar tu tienda y vincular tu asistente (Claude web/desktop/celular, Claude Code, etc.).
 
-## ✨ ¿Qué vas a poder hacer?
+## ✨ Qué podés hacer
 
-### Productos
-- Crear, editar y eliminar productos
-- Manejar variantes (talle, color) con su propio precio y stock
-- Actualizar precios y stock de forma individual o masiva
-- Detectar productos incompletos (sin foto, sin descripción, sin stock)
-
-### Pedidos
-- Consultar pedidos por estado, fecha o cliente
-- Ver el detalle completo de un pedido
-- Cerrar, reabrir o cancelar pedidos
-
-### Clientes y promociones
-- Buscar clientes y ver su historial
-- Crear y consultar cupones de descuento
-
-### Ventas
-- Consultar ventas por período
-- Ver productos más vendidos y métricas clave
+- **Productos:** listar, ver, crear, editar y eliminar productos; subir o bajar precios por categoría en porcentaje, con vista previa antes de aplicar.
+- **Variantes:** agregar, editar y eliminar variantes (talle, color) con su propio precio y stock.
+- **Imágenes:** agregar, actualizar y eliminar imágenes de productos.
+- **Categorías:** listar, crear, editar y eliminar categorías.
+- **Pedidos:** listar y ver el detalle; cerrar, reabrir, cancelar y agregar notas.
+- **Cupones:** listar, ver, crear, editar y eliminar cupones de descuento.
 
 ## 🔐 Cómo funciona
 
-1. Te registrás en el sitio web
-2. Conectás tu Tiendanube con un clic (autorizás el acceso desde Tiendanube)
-3. Obtenés tu clave personal
-4. La agregás a tu asistente de IA favorito y empezás a conversar
+1. Te registrás en el sitio (Clerk).
+2. Conectás tu Tiendanube con OAuth y ves los permisos otorgados.
+3. Agregás StoreTalk como conector en tu asistente (`/mcp`), iniciás sesión, elegís la tienda y autorizás.
+4. Empezás a conversar.
 
-Tus credenciales se guardan cifradas y podés desconectar tu tienda en cualquier momento.
+Los tokens de Tiendanube se guardan cifrados (AES-256-GCM), los datos de la tienda se consultan siempre en vivo y podés desconectar tu tienda desde el dashboard cuando quieras.
 
-## 📊 Dashboard
+## 🧰 Stack
 
-- Estado de la conexión con tu tienda
-- Gestión de tus claves de acceso
-- Historial de uso: qué acciones se ejecutaron y cuándo
+- **Backend:** Python 3.12, FastAPI, FastMCP (Streamable HTTP), SQLAlchemy + Alembic, Postgres (Neon).
+- **Frontend:** Next.js (App Router), React, TypeScript, Tailwind, Clerk.
 
-## 🗺️ Roadmap
+## 🖥️ Levantarlo en local
 
-- [ ] Gestión de productos y variantes
-- [ ] Gestión de pedidos
-- [ ] Clientes y cupones
-- [ ] Dashboard de usuario
-- [ ] Reportes de ventas
-- [ ] Carga masiva desde planillas
-- [ ] Generación de descripciones y textos SEO con IA
+Requisitos: [uv](https://docs.astral.sh/uv/), Node 20+, una base Postgres (Neon sirve), una app de Tiendanube Partners, una instancia de Clerk y [ngrok](https://ngrok.com/).
 
-## 🤝 Estado
+1. **Variables:** copiá `backend/.env.example` a `.env` en la raíz y `frontend/.env.example` a `frontend/.env.local`, y completalas (`ENCRYPTION_KEY` y `API_KEY_PEPPER` se generan con el comando que figura en el ejemplo).
+2. **Túnel:** `ngrok http 8000`. Usá esa URL en `PUBLIC_BASE_URL` (`.env`), en `NEXT_PUBLIC_MCP_URL=<ngrok>/mcp` (`frontend/.env.local`) y como Redirect URL en Tiendanube Partners: `<ngrok>/api/tiendanube/callback`.
+3. **Backend** (en `backend/`):
+   ```bash
+   uv sync
+   uv run alembic upgrade head
+   uv run uvicorn src.main:app --reload   # API en :8000, MCP en :8000/mcp
+   ```
+4. **Frontend** (en `frontend/`):
+   ```bash
+   npm install
+   npm run dev                            # http://localhost:3000
+   ```
+5. Entrá a `http://localhost:3000`, conectá tu tienda y seguí la guía de `/connect-ai` para sumar el conector `<ngrok>/mcp` a tu asistente.
 
-Proyecto en etapa temprana. Si te interesa probarlo o tenés ideas, abrí un issue.
-
-
-![image](https://github.com/user-attachments/assets/f4c3c33d-e421-408e-85e7-2e9014b951c8)
+Más detalle (API keys manuales, MCP Inspector, tests) en [`backend/LOCAL_DEV.md`](backend/LOCAL_DEV.md).
