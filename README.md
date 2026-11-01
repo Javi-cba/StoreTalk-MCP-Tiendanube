@@ -26,6 +26,7 @@ Los tokens de Tiendanube se guardan cifrados (AES-256-GCM), los datos de la tien
 
 - **Backend:** Python 3.12, FastAPI, FastMCP (Streamable HTTP), SQLAlchemy + Alembic, Postgres (Neon).
 - **Frontend:** Next.js (App Router), React, TypeScript, Tailwind, Clerk.
+- **Cloud (AWS):** frontend en Amplify Hosting (SSR); backend como imagen Docker en ECR, corriendo en AWS Lambda (Lambda Web Adapter + Function URL). Primero lo desplegamos en ECS Fargate (Express Mode), y después lo pasamos a Lambda por costo: free tier.
 
 ## 🖥️ Levantarlo en local
 
