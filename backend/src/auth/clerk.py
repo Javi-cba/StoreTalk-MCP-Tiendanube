@@ -32,6 +32,18 @@ class ClerkUnavailableError(Exception):
 class ClerkSession:
     user_id: str
     session_id: str | None
+    # Custom session claims (Clerk Dashboard -> Sessions -> Customize session token):
+    # {"email": "{{user.primary_email_address}}", "name": "{{user.full_name}}"}
+    email: str | None = None
+    name: str | None = None
+
+
+def _text_claim(claims: dict[str, object], key: str, max_length: int) -> str | None:
+    """Non-empty string claim, trimmed to the DB column size; anything else -> None."""
+    value = claims.get(key)
+    if not isinstance(value, str) or not value.strip():
+        return None
+    return value.strip()[:max_length]
 
 
 class JwksCache:
@@ -120,4 +132,6 @@ async def verify_session_token(
     return ClerkSession(
         user_id=str(claims["sub"]),
         session_id=session_id if isinstance(session_id, str) else None,
+        email=_text_claim(claims, "email", 320),
+        name=_text_claim(claims, "name", 255),
     )

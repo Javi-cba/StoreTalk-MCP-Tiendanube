@@ -95,6 +95,37 @@ async def test_jwks_down_is_unavailable(http: httpx.AsyncClient) -> None:
         await _verify(http, _token())
 
 
+@respx.mock
+async def test_profile_claims_are_read(http: httpx.AsyncClient) -> None:
+    respx.get(JWKS_URL).mock(return_value=httpx.Response(200, json=_jwks()))
+    session = await verify_session_token(
+        _token(email="  ana@example.com ", name="Ana Pérez"),
+        http=http,
+        issuer=ISSUER,
+        jwks_url=JWKS_URL,
+        authorized_parties=frozenset({ORIGIN}),
+    )
+    assert (session.email, session.name) == ("ana@example.com", "Ana Pérez")
+
+
+@respx.mock
+@pytest.mark.parametrize(
+    "overrides", [{}, {"email": "", "name": "   "}, {"email": 1, "name": None}]
+)
+async def test_missing_or_invalid_profile_claims_are_none(
+    http: httpx.AsyncClient, overrides: dict[str, Any]
+) -> None:
+    respx.get(JWKS_URL).mock(return_value=httpx.Response(200, json=_jwks()))
+    session = await verify_session_token(
+        _token(**overrides),
+        http=http,
+        issuer=ISSUER,
+        jwks_url=JWKS_URL,
+        authorized_parties=frozenset({ORIGIN}),
+    )
+    assert (session.email, session.name) == (None, None)
+
+
 def test_issuer_from_publishable_key() -> None:
     encoded = base64.b64encode(b"example.clerk.accounts.dev$").decode().rstrip("=")
     assert _issuer_from_publishable_key(f"pk_test_{encoded}") == ISSUER

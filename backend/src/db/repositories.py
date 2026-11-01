@@ -15,15 +15,23 @@ PROVIDER_TIENDANUBE = "tiendanube"
 
 
 async def get_or_create_user(
-    session: AsyncSession, clerk_user_id: str, email: str | None = None
+    session: AsyncSession,
+    clerk_user_id: str,
+    email: str | None = None,
+    name: str | None = None,
 ) -> User:
     user = await session.scalar(select(User).where(User.clerk_user_id == clerk_user_id))
     if user is not None:
+        # Users created before the session claims existed get them on their next login.
+        if user.email is None and email is not None:
+            user.email = email
+        if user.name is None and name is not None:
+            user.name = name
         return user
     # ON CONFLICT: two first requests of the same Clerk user can race here.
     await session.execute(
         insert(User)
-        .values(id=uuid.uuid4(), clerk_user_id=clerk_user_id, email=email)
+        .values(id=uuid.uuid4(), clerk_user_id=clerk_user_id, email=email, name=name)
         .on_conflict_do_nothing(index_elements=[User.clerk_user_id])
     )
     created = await session.scalar(select(User).where(User.clerk_user_id == clerk_user_id))

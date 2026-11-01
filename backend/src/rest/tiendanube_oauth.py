@@ -97,7 +97,9 @@ async def connect(
     language = store.main_language if store else None
     store_name = localize(store.name, language) if store else None
 
-    user = await repositories.get_or_create_user(db, session.user_id)
+    user = await repositories.get_or_create_user(
+        db, session.user_id, email=session.email, name=session.name
+    )
     connection = await repositories.upsert_tiendanube_connection(
         db,
         user_id=user.id,

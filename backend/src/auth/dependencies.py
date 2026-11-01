@@ -73,7 +73,9 @@ async def get_current_user(
     session: CurrentSession, db: Annotated[AsyncSession, Depends(get_db)]
 ) -> User:
     """Maps the Clerk `sub` to our users table (created on first request)."""
-    user = await repositories.get_or_create_user(db, session.user_id)
+    user = await repositories.get_or_create_user(
+        db, session.user_id, email=session.email, name=session.name
+    )
     await db.commit()
     return user
 
