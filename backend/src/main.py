@@ -36,7 +36,7 @@ app = FastAPI(title="StoreTalk API", lifespan=lifespan)
 register_error_handlers(app)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[settings.frontend_origin],
+    allow_origins=[settings.frontend_origin.rstrip("/")],  # browsers send the origin without "/"
     allow_methods=["GET", "POST", "DELETE"],
     allow_headers=["Authorization", "Content-Type"],
 )
