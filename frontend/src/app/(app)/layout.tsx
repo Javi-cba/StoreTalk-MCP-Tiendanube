@@ -4,13 +4,14 @@ import { Footer } from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
 import { PageBackground } from "@/components/layout/page-background";
 import { AccountActions } from "@/components/layout/account-actions";
-import { clerkAppearance, clerkLocalization } from "@/lib/auth/clerk";
+import { clerkAppearance, clerkLocalization, SIGN_IN_URL, SIGN_UP_URL } from "@/lib/auth/clerk";
 import { clerkProxyUrl } from "@/lib/auth/clerkProxy";
 
 /** Área privada: Clerk vive solo acá, la landing no lo carga. */
 export default function AppLayout({ children }: LayoutProps<"/">) {
   return (
-    <ClerkProvider localization={clerkLocalization} appearance={clerkAppearance} proxyUrl={clerkProxyUrl}>
+    <ClerkProvider localization={clerkLocalization} appearance={clerkAppearance} proxyUrl={clerkProxyUrl}
+      signInUrl={SIGN_IN_URL} signUpUrl={SIGN_UP_URL}>
       <PageBackground />
       <Navbar intro={false} actions={
           <Suspense>

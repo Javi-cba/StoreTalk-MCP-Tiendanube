@@ -1,4 +1,5 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { SIGN_IN_URL, SIGN_UP_URL } from "@/lib/auth/clerk";
 import { CLERK_PROXY_PATH, clerkUsesProxy } from "@/lib/auth/clerkProxy";
 
 // Solo el área privada pide sesión; la landing y el resto quedan públicos.
@@ -15,7 +16,11 @@ export default clerkMiddleware(
     }
   },
   // Producción en *.amplifyapp.com: atiende /__clerk/* reenviando al Frontend API de Clerk.
-  { frontendApiProxy: { enabled: clerkUsesProxy, path: CLERK_PROXY_PATH } },
+  {
+    signInUrl: SIGN_IN_URL,
+    signUpUrl: SIGN_UP_URL,
+    frontendApiProxy: { enabled: clerkUsesProxy, path: CLERK_PROXY_PATH },
+  },
 );
 
 export const config = {

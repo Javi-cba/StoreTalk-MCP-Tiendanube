@@ -1,6 +1,6 @@
 "use client";
 
-import { HandleSSOCallback, useClerk, useSignIn } from "@clerk/nextjs";
+import { HandleSSOCallback, useAuth, useClerk, useSignIn } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { LoadingMascot } from "@/components/ui/loading-mascot";
@@ -14,6 +14,15 @@ export function SsoCallback() {
   const { signIn } = useSignIn();
   const [checked, setChecked] = useState(false);
   const copy = authCopy.callback;
+  const { isSignedIn } = useAuth();
+
+  // Red de seguridad: si la sesión ya quedó creada y HandleSSOCallback no navegó (pasó en
+  // producción detrás del proxy de Clerk), seguimos igual al destino guardado.
+  useEffect(() => {
+    if (!isSignedIn) return;
+    const timer = window.setTimeout(() => router.replace(consumeAfterAuth()), 1500);
+    return () => window.clearTimeout(timer);
+  }, [isSignedIn, router]);
 
   useEffect(() => {
     if (!clerk.loaded || checked) return;
